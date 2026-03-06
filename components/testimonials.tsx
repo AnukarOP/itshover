@@ -36,11 +36,11 @@ export default function TestimonialSection() {
             className="font-serif text-5xl md:text-6xl"
             style={{ fontFamily: "Georgia, serif" }}
           >
-            What People Say
+            Loved by Creators
           </h2>
           <p className="text-muted-foreground max-w-2xl px-4 text-lg">
-            Join thousands of creators who are bringing their icons to life with
-            intent.
+            See why developers and designers are choosing itshover to bring
+            their interfaces to life with motion and intent.
           </p>
         </motion.div>
 
