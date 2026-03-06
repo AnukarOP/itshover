@@ -1,7 +1,10 @@
 import { motion } from "motion/react";
 import VideoCard from "./ui/video-card";
+import { useState } from "react";
 
 export default function TestimonialSection() {
+  const [activeIndex, setActiveIndex] = useState(0); // 0 for reel, 1 for video
+
   const featuredVideo = {
     src: "https://res.cloudinary.com/dtw3o2jxc/video/upload/v1772367229/manu-paaji-itshover-yt_uiqsor.mp4",
     title: "Its Hover Feature by Manu Arora",
@@ -52,6 +55,8 @@ export default function TestimonialSection() {
             aspectRatio={featuredReel.aspectRatio}
             delay={featuredReel.delay}
             className="shadow-primary/5 shadow-2xl"
+            isControlledPlaying={activeIndex === 0}
+            onEnded={() => setActiveIndex(1)}
           />
           <VideoCard
             src={featuredVideo.src}
@@ -59,6 +64,8 @@ export default function TestimonialSection() {
             aspectRatio={featuredVideo.aspectRatio}
             delay={featuredVideo.delay}
             className="shadow-primary/10 shadow-2xl"
+            isControlledPlaying={activeIndex === 1}
+            onEnded={() => setActiveIndex(0)}
           />
         </div>
       </div>

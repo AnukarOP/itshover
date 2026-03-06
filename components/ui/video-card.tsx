@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 
 interface VideoCardProps {
   src: string;
@@ -9,6 +9,8 @@ interface VideoCardProps {
   aspectRatio?: "video" | "reel";
   delay?: number;
   className?: string;
+  isControlledPlaying?: boolean;
+  onEnded?: () => void;
 }
 
 export default function VideoCard({
@@ -17,23 +19,66 @@ export default function VideoCard({
   aspectRatio = "video",
   delay = 0,
   className = "",
+  isControlledPlaying,
+  onEnded,
 }: VideoCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const hideTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [isUIVisible, setIsUIVisible] = useState(true);
+
+  const showUI = useCallback(() => {
+    setIsUIVisible(true);
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    hideTimerRef.current = setTimeout(() => {
+      if (videoRef.current && !videoRef.current.paused) {
+        setIsUIVisible(false);
+      }
+    }, 3000);
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
+    const onPlay = () => {
+      setIsPlaying(true);
+      showUI();
+    };
+    const onPause = () => setIsPlaying(false);
+
+    video.addEventListener("play", onPlay);
+    video.addEventListener("pause", onPause);
+
+    return () => {
+      video.removeEventListener("play", onPlay);
+      video.removeEventListener("pause", onPause);
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    };
+  }, [showUI]);
+
+  useEffect(() => {
+    if (isControlledPlaying !== undefined) {
+      if (isControlledPlaying) {
+        videoRef.current?.play().catch(() => {});
+      } else {
+        videoRef.current?.pause();
+      }
+    }
+  }, [isControlledPlaying]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || isControlledPlaying !== undefined) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           video.play().catch(() => {});
-          setIsPlaying(true);
         } else {
           video.pause();
-          setIsPlaying(false);
         }
       },
       { threshold: 0.5 },
@@ -41,17 +86,17 @@ export default function VideoCard({
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, []);
+  }, [isControlledPlaying]);
 
   const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (videoRef.current) {
       if (videoRef.current.paused) {
         videoRef.current.play();
-        setIsPlaying(true);
+        showUI();
       } else {
         videoRef.current.pause();
-        setIsPlaying(false);
+        setIsUIVisible(true); // Keep UI visible when paused
       }
     }
   };
@@ -62,15 +107,18 @@ export default function VideoCard({
       const newMuted = !isMuted;
       videoRef.current.muted = newMuted;
       setIsMuted(newMuted);
+      showUI();
     }
   };
 
   return (
     <motion.div
+      ref={containerRef}
       initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, delay }}
       viewport={{ once: true }}
+      onMouseMove={showUI}
       className={`group hover:border-primary/40 hover:shadow-primary/10 relative flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-black/40 backdrop-blur-md transition-all hover:shadow-2xl ${
         aspectRatio === "reel"
           ? "mx-auto aspect-[9/16] w-full max-w-[320px]"
@@ -83,14 +131,23 @@ export default function VideoCard({
         title={title}
         className="h-full w-full object-cover"
         muted={isMuted}
-        loop
+        loop={!onEnded}
+        onEnded={onEnded}
         playsInline
       />
 
       {/* Overlay UI */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-100" />
+      <div
+        className={`absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent transition-opacity duration-500 ${
+          isUIVisible ? "opacity-60 group-hover:opacity-100" : "opacity-0"
+        }`}
+      />
 
-      <div className="absolute right-6 bottom-6 left-6 flex items-center justify-between">
+      <div
+        className={`absolute right-6 bottom-6 left-6 flex items-center justify-between transition-all duration-500 ${
+          isUIVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+        }`}
+      >
         <div className="flex flex-col space-y-1">
           <span className="text-sm font-semibold text-white/90 drop-shadow-md">
             {title}
