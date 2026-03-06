@@ -41,10 +41,6 @@ export default function TestimonialSection() {
           >
             Loved by Creators
           </h2>
-          <p className="text-muted-foreground max-w-2xl px-4 text-lg">
-            See why developers and designers are choosing itshover to bring
-            their interfaces to life with motion and intent.
-          </p>
         </motion.div>
 
         {/* Featured Videos Row */}
