@@ -10,6 +10,7 @@ import MoonIcon from "../ui/moon-icon";
 import LogoutIcon from "../ui/logout-icon";
 
 import type { AnimatedIconHandle, AnimatedIconProps } from "../ui/types";
+import { log } from "console";
 
 interface DropdownItemProps {
   icon: React.ComponentType<
@@ -78,19 +79,16 @@ const DropdownItem = ({
   }
 
   if (rightElement) {
-    return (
-      <div
-        className={baseClasses}
-        onMouseEnter={startAnimation}
-        onMouseLeave={stopAnimation}
-        onFocus={startAnimation}
-        onBlur={stopAnimation}
-        tabIndex={0}
-      >
-        {content}
-      </div>
-    );
-  }
+  return (
+    <div
+      className="flex items-center rounded-xl px-4 py-3"
+      onMouseEnter={startAnimation}
+      onMouseLeave={stopAnimation}
+    >
+      {content}
+    </div>
+  );
+}
 
   return (
     <button
@@ -130,27 +128,27 @@ const ProfileDropdown = ({ isAnimated = true }: ProfileDropdownProps) => {
         </div>
       </div>
 
-      {/* Menu */}
       <div className="space-y-1 p-2">
 
         <DropdownItem
           icon={UserCheckIcon}
           label="Profile"
-          href="#"
+            onClick={() => console.log("Profile clicked")}
+
           isAnimated={isAnimated}
         />
 
         <DropdownItem
           icon={GearIcon}
           label="Account Settings"
-          href="#"
+            onClick={() => console.log("Account Settings clicked")}
           isAnimated={isAnimated}
         />
 
         <DropdownItem
           icon={FilledBellIcon}
           label="Notifications"
-          href="#"
+            onClick={() => console.log("Notifications clicked")}
           isAnimated={isAnimated}
         />
 
