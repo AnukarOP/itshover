@@ -3,10 +3,7 @@ import type { AnimatedIconHandle, AnimatedIconProps } from "./types";
 import { motion, useAnimate } from "motion/react";
 
 const DinoIcon = forwardRef<AnimatedIconHandle, AnimatedIconProps>(
-  (
-    { size = 24, className = "" },
-    ref,
-  ) => {
+  ({ size = 24, className = "" }, ref) => {
     const [scope, animate] = useAnimate();
 
     const start = useCallback(() => {
@@ -14,10 +11,10 @@ const DinoIcon = forwardRef<AnimatedIconHandle, AnimatedIconProps>(
       animate(
         scope.current,
         { rotate: -10 },
-        { 
-          duration: 0.3, 
-          ease: "easeOut"
-        }
+        {
+          duration: 0.3,
+          ease: "easeOut",
+        },
       );
     }, [animate, scope]);
 
@@ -51,7 +48,7 @@ const DinoIcon = forwardRef<AnimatedIconHandle, AnimatedIconProps>(
             fill="currentColor"
             transform="translate(57,35)"
           />
-          
+
           {/* 2. Interior Cutouts (Fill with background) */}
           <path
             d="M5 5 C5 5.66 5 6.32 5 7 C4 7 3 7 2 7 C2 12.9 2 18.9 2 25 C1 25 0 25 -1 25 C-1 26 -1 27 -1 28 C-2.3 28 -3.6 28 -5 28 C-5 29 -5 30 -5 31 C-6.6 31 -8.3 31 -10 31 C-10 32 -10 33 -10 34 C-10.7 34 -11.3 34 -12 34 C-12 34.7 -12 35.3 -12 36 C-14 36 -16 36 -18 36 C-18 35 -18 34 -18 33 C-19 33 -20 33 -21 33 C-21 32.3 -21 31.7 -21 31 C-22 31 -23 31 -24 31 C-24 29 -24 27 -24 25 C-25 25 -26 25 -27 25 C-27 30.6 -27 36.2 -27 42 C-26 42 -25 42 -24 42 C-24 42.7 -24 43.3 -24 44 C-23 44 -22 44 -21 44 C-21 45 -21 46 -21 47 C-20 47 -19 47 -18 47 C-18 48 -18 49 -18 50 C-17 50 -16 50 -15 50 C-15 51 -15 52 -15 53 C-14.3 53 -13.7 53 -13 53 C-13 56.6 -13 60.3 -13 64 C-11 64 -9 64 -7 64 C-7 63 -7 62 -7 61 C-7.7 61 -8.3 61 -9 61 C-9 60.3 -9 59.7 -9 59 C-8.3 59 -7.7 59 -7 59 C-7 58 -7 57 -7 56 C-6 56 -5 56 -4 56 C-4 55 -4 54 -4 53 C-3 53 -2 53 -1 53 C-1 54 -1 55 -1 56 C1.7 57.4 4 57.1 7 57 C7 56 -7 55 -7 54 C6 54 5 54 4 54 C4 52.7 4 51.4 4 50 C5 50 6 50 7 50 C7 49 7 48 7 47 C7.7 47 8.3 47 9 47 C9 43.1 9 44.4 9 43 C10 43 11 43 12 43 C12 40 12 37.1 12 34 C13 34 14 34 15 34 C15 34.7 15 35.3 15 36 C16 36 17 36 18 36 C18 34.4 18 32.7 18 31 C16 31 14 31 12 31 C12 29 12 27 12 25 C16 25 19.9 25 24 25 C24 24 24 23 24 22 C21 22 18.1 22 15 22 C15 21 15 20 15 19 C19.6 19 24.2 19 29 19 C29 15 29 11.1 29 7 C28 7 27 7 26 7 C26 6.3 26 5.7 26 5 C19.1 5 12.1 5 5 5 Z"
@@ -70,7 +67,7 @@ const DinoIcon = forwardRef<AnimatedIconHandle, AnimatedIconProps>(
             fill="currentColor"
             transform="translate(38,55)"
           />
-          
+
           {/* 4. Eye Detail: User requested currentColor (Solid) */}
           <path
             d="M0 0 C1.98 0 3.96 0 6 0 C6 1.98 6 3.96 6 6 C4.02 6 2.04 6 0 6 C0 4.02 0 2.04 0 0 Z"
